@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation project(":ddd-core")
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:2.4.3'
+    implementation 'org.mongodb:mongodb-driver-reactivestreams:4.2.2'
+    implementation 'io.projectreactor:reactor-core:3.4.4'
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = ["-parameters"]
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

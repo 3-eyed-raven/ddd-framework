@@ -1,0 +1,29 @@
+// 所有项目共用，包括根项目
+allprojects {
+    // 统一组名和版本
+    group 'net.jsrbc.ddd-framework'
+    version '1.0.0'
+}
+
+//所有子模块的公共依赖包
+subprojects {
+    // Gradle配置完成后的回调
+    afterEvaluate {
+        // jdk版本管理
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        // 公共仓库，本地和阿里云优先
+        repositories {
+            mavenLocal()
+            maven {url "http://maven.aliyun.com/nexus/content/groups/public"}
+            mavenCentral()
+        }
+        // 公共依赖包
+        dependencies {
+            implementation fileTree(dir: "libs", includes: ["*.jar"])
+        }
+        // 测试平台
+        test {
+            useJUnitPlatform()
+        }
+    }
+}

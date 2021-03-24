@@ -1,0 +1,76 @@
+package net.jsrbc.event.rabbitmq;
+
+import net.jsrbc.ddd.core.model.event.DomainEvent;
+import net.jsrbc.ddd.core.model.event.EventSubscriber;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import reactor.core.publisher.Mono;
+import reactor.rabbitmq.BindingSpecification;
+import reactor.rabbitmq.QueueSpecification;
+import reactor.rabbitmq.Receiver;
+import reactor.rabbitmq.Sender;
+
+import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
+
+/**
+ * 事件订阅器
+ * @author ZZZ on 2021/2/25 14:26
+ * @version 1.0
+ */
+public class RabbitmqEventSubscriber implements EventSubscriber {
+
+    private final static Logger LOGGER = LogManager.getLogger();
+
+    private final Receiver receiver;
+
+    private final Sender sender;
+
+    private final BindingRegistry bindingRegistry;
+
+    /**
+     * 订阅事件类型，事件消费完后才确认，prefetch默认设为250
+     * 适合消息比较重要，需要确保消息处理完后才能确认，但是需要注意消息吞吐率
+     * 订阅操作是异步执行的
+     * @param eventClass 事件类型
+     */
+    @Override
+    public <T extends DomainEvent> void subscribe(Class<T> eventClass, Consumer<T> eventConsumer) {
+        declareAndBindQueue(eventClass)
+                .flatMapMany(this.receiver::consumeManualAck)
+                .subscribe(d -> {
+                    try {
+                        eventConsumer.accept(JsonUtils.toObject(new String(d.getBody(), StandardCharsets.UTF_8), eventClass));
+                        d.ack();
+                    } catch (Throwable e) {
+                        LOGGER.error(e);
+                    }
+                });
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.receiver.close();
+    }
+
+    public RabbitmqEventSubscriber(Receiver receiver, Sender sender, BindingRegistry bindingRegistry) {
+        this.receiver = receiver;
+        this.sender = sender;
+        this.bindingRegistry = bindingRegistry;
+    }
+
+    /**
+     * 声明和绑定队列
+     * @param eventClass 事件类型
+     * @return 队列
+     */
+    private Mono<String> declareAndBindQueue(Class<?> eventClass) {
+        String routingKey = this.bindingRegistry.getRoutingKey(eventClass);
+        String queueName = this.bindingRegistry.getQueueName(eventClass);
+        String exchangeName = this.bindingRegistry.getExchangeName(eventClass);
+        return this.sender
+                .declareQueue(QueueSpecification.queue(queueName).durable(true))
+                .then(this.sender.bindQueue(BindingSpecification.queueBinding(exchangeName, routingKey, queueName)))
+                .thenReturn(queueName);
+    }
+}

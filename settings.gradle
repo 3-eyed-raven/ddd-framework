@@ -1,0 +1,5 @@
+rootProject.name = 'ddd-framework'
+include 'ddd-core'
+include 'event-rabbitmq'
+include 'repository-mongodb'
+
