@@ -32,7 +32,7 @@ public abstract class AbstractEventStore {
     /**
      * 错误处理器
      */
-    abstract Consumer<? super Throwable> errorHandler();
+    abstract protected Consumer<? super Throwable> errorHandler();
 
     /**
      * 获取事件并标记为发送状态
