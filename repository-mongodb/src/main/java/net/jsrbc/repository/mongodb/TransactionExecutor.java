@@ -17,7 +17,7 @@ public class TransactionExecutor {
 
     /**
      * 事务执行操作
-     * @param callable 执行回调
+     * @param executor 执行回调
      */
     public void execute(Executor executor) {
         transactionTemplate.executeWithoutResult(status -> {
