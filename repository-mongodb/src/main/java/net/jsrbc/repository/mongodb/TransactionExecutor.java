@@ -17,12 +17,12 @@ public class TransactionExecutor {
 
     /**
      * 事务执行操作
-     * @param runnable 执行回调
+     * @param callable 执行回调
      */
-    public void execute(Runnable runnable) {
+    public void execute(Executor executor) {
         transactionTemplate.executeWithoutResult(status -> {
             try {
-                runnable.run();
+                executor.execute();
             } catch (Throwable e) {
                 if (e instanceof RuntimeException) {
                     throw (RuntimeException) e;
@@ -31,6 +31,11 @@ public class TransactionExecutor {
                 }
             }
         });
+    }
+
+    @FunctionalInterface
+    public interface Executor {
+        void execute() throws Throwable;
     }
 
     public TransactionExecutor(MongoTemplate mongoTemplate, MongoTransactionManager transactionManager) {
