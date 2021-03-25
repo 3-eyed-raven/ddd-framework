@@ -75,7 +75,7 @@ public abstract class AbstractRabbitmqConfigurer {
     /**
      * 事件发送器
      */
-    @Bean
+    @Bean(destroyMethod = "close")
     public EventSender eventSender(BindingRegistry bindingRegistry, Sender sender) {
         // 声明交换机
         bindingRegistry.declareExchange(sender);
@@ -86,7 +86,7 @@ public abstract class AbstractRabbitmqConfigurer {
     /**
      * 事件订阅器
      */
-    @Bean
+    @Bean(destroyMethod = "close")
     public EventSubscriber eventSubscriber(ConnectionFactory connectionFactory, BindingRegistry bindingRegistry, Sender sender) {
         ReceiverOptions receiverOptions = new ReceiverOptions();
         receiverOptions.connectionFactory(connectionFactory);
