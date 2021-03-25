@@ -1,5 +1,6 @@
 package net.jsrbc.repository.mongodb.tools;
 
+import com.mongodb.client.result.UpdateResult;
 import net.jsrbc.ddd.core.model.aggregate.Aggregate;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
@@ -87,22 +88,22 @@ public class SafeMongoTemplate implements SafeMongoOperations {
 
     @Override
     public void remove(Aggregate aggregate) {
-        Aggregate result = this.mongoOperations.findAndModify(
+        UpdateResult result = this.mongoOperations.updateMulti(
                 versionQuery(aggregate).addCriteria(where(DELETE_KEY).is(null)),
                 Update.update(DELETE_KEY, System.currentTimeMillis()),
                 aggregate.getClass());
-        if (result == null) {
+        if (result.getModifiedCount() == 0) {
             throw new InvalidDataException();
         }
     }
 
     @Override
     public void restore(Aggregate aggregate) {
-        Aggregate result = this.mongoOperations.findAndModify(
+        UpdateResult result = this.mongoOperations.updateMulti(
                 versionQuery(aggregate).addCriteria(where(DELETE_KEY).ne(null)),
                 Update.update(DELETE_KEY, null),
                 aggregate.getClass());
-        if (result == null) {
+        if (result.getModifiedCount() == 0) {
             throw new InvalidDataException();
         }
     }

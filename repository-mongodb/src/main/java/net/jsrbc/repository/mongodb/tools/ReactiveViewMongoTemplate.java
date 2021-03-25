@@ -61,7 +61,7 @@ public class ReactiveViewMongoTemplate implements ReactiveViewMongoOperations {
 
     @Override
     public <T extends View> Mono<Void> update(Query query, Update update, Class<T> viewClass) {
-        return this.reactiveMongoOperations.findAndModify(query, update, viewClass).then(Mono.empty());
+        return this.reactiveMongoOperations.updateMulti(query, update, viewClass).then(Mono.empty());
     }
 
     public ReactiveViewMongoTemplate(ReactiveMongoOperations reactiveMongoOperations) {
