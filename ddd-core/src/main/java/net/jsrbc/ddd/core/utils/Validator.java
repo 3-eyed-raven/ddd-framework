@@ -2,7 +2,6 @@ package net.jsrbc.ddd.core.utils;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -105,11 +104,12 @@ public class Validator {
 
     /**
      * 判断集合内对象是否唯一
-     * @param list 集合
+     * @param collection 集合
+     * @param message 错误消息
      */
-    public static void isUnique(List<?> list, String message) {
-        int size = new HashSet<>(list).size();
-        if (size != list.size()) {
+    public static void isUnique(Collection<?> collection, String message) {
+        int size = new HashSet<>(collection).size();
+        if (size != collection.size()) {
             throw new IllegalArgumentException(message);
         }
     }
