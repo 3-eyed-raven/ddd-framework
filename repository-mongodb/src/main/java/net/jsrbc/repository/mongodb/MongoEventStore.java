@@ -47,7 +47,6 @@ public class MongoEventStore extends AbstractEventStore {
         return ERROR_HANDLER;
     }
 
-
     @Override
     protected DomainEvent getAndMarkSending(Long deliveryTime) {
         return this.mongoOperations.findAndModify(
@@ -59,7 +58,7 @@ public class MongoEventStore extends AbstractEventStore {
 
     @Override
     protected void markPending(DomainEvent event) {
-        this.mongoOperations.findAndModify(query(where("id").is(event.getId())),
+        this.mongoOperations.updateMulti(query(where("id").is(event.getId())),
                 update(EVENT_STATUS_FIELD, PENDING),
                 DomainEvent.class,
                 EVENT_STORE);
@@ -67,7 +66,7 @@ public class MongoEventStore extends AbstractEventStore {
 
     @Override
     protected void markSuccess(DomainEvent event) {
-        this.mongoOperations.findAndModify(query(where("id").is(event.getId())),
+        this.mongoOperations.updateMulti(query(where("id").is(event.getId())),
                 update(EVENT_STATUS_FIELD, SUCCESS),
                 DomainEvent.class,
                 EVENT_STORE);
@@ -75,7 +74,7 @@ public class MongoEventStore extends AbstractEventStore {
 
     @Override
     protected void markSendingTimeoutToPending(Long deliveryExpiredTime) {
-        this.mongoOperations.findAndModify(
+        this.mongoOperations.updateMulti(
                 query(where(EVENT_STATUS_FIELD).is(SENDING).and(DELIVERY_TIME).lt(deliveryExpiredTime)),
                 update(EVENT_STATUS_FIELD, PENDING),
                 DomainEvent.class,
