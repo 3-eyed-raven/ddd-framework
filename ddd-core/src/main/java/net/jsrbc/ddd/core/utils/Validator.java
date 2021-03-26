@@ -1,6 +1,8 @@
 package net.jsrbc.ddd.core.utils;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -97,6 +99,17 @@ public class Validator {
      */
     public static void isUri(String uri, String message) {
         if (!UriPatternHolder.URI_PATTERN.matcher(uri).matches()) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    /**
+     * 判断集合内对象是否唯一
+     * @param list 集合
+     */
+    public static void isUnique(List<?> list, String message) {
+        int size = new HashSet<>(list).size();
+        if (size != list.size()) {
             throw new IllegalArgumentException(message);
         }
     }
