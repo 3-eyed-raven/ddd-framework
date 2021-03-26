@@ -12,7 +12,7 @@ import java.util.function.Consumer;
  * @author ZZZ on 2021-03-24 15:24
  * @version 1.0
  */
-public abstract class AbstractEventStore {
+public abstract class AbstractEventStore implements AutoCloseable {
 
     /** 定时器 */
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
@@ -78,6 +78,11 @@ public abstract class AbstractEventStore {
         this.scheduler.scheduleAtFixedRate(this::clearSuccessEvent, 0, 1, TimeUnit.DAYS);
     }
 
+    @Override
+    public void close() {
+        this.scheduler.shutdownNow();
+    }
+
     public AbstractEventStore(EventSender eventSender) {
         this.eventSender = eventSender;
     }
@@ -111,7 +116,6 @@ public abstract class AbstractEventStore {
     private void clearSuccessEvent() {
         this.deleteSuccessEvent();
     }
-
 
     /**
      * 发送事件

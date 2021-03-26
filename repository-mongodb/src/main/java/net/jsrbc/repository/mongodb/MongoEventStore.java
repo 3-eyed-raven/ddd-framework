@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoOperations;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.function.Consumer;
 
 import static net.jsrbc.ddd.core.model.event.EventStatus.*;
@@ -40,6 +41,11 @@ public class MongoEventStore extends AbstractEventStore {
     @Override
     public void init() {
         super.init();
+    }
+
+    @PreDestroy
+    public void close() {
+        super.close();
     }
 
     @Override
