@@ -108,6 +108,7 @@ public class Validator {
      * @param message 错误消息
      */
     public static void isUnique(Collection<?> collection, String message) {
+        if (collection == null) return;
         int size = new HashSet<>(collection).size();
         if (size != collection.size()) {
             throw new IllegalArgumentException(message);
