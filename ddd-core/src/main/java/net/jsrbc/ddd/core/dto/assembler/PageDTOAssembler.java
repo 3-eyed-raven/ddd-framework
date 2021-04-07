@@ -26,5 +26,14 @@ public final class PageDTOAssembler {
         }
     }
 
+    /**
+     * 不作分页的页面数据
+     * @param data 数据
+     * @return 页面数据
+     */
+    public static PageDTO toDTO(List<?> data) {
+        return new PageDTO(data, null, null, null, true);
+    }
+
     private PageDTOAssembler() {}
 }
