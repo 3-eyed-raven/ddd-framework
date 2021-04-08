@@ -7,10 +7,7 @@ import net.jsrbc.ddd.core.model.valueobject.TreeInfo;
 import net.jsrbc.ddd.core.view.TreeView;
 import net.jsrbc.ddd.core.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -71,7 +68,7 @@ public final class TreeNodeDTOAssembler {
                 .peek(t -> payloadConsumer.accept(t.getPayload()))
                 .collect(Collectors.toList());
         // 2、获取最高层级
-        int maxLevels = list.stream().mapToInt(t -> treeInfoGetter.apply(t).getAncestorIds().size()).max().orElse(0);
+        int maxLevels = list.stream().mapToInt(t -> Optional.ofNullable(treeInfoGetter.apply(t).getAncestorIds()).map(List::size).orElse(0)).max().orElse(0);
         // 3、按照最大层级去组装
         List<TreeNodeDTO> parentNodes = new ArrayList<>(roots);
         for (int level = 0; level < maxLevels; level++) {
