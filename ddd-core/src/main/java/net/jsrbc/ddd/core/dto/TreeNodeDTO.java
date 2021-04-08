@@ -21,12 +21,12 @@ public class TreeNodeDTO {
     private List<TreeNodeDTO> children;
 
     /** 实际数据 */
-    private final Map<String, Object> payload;
+    private final Object payload;
 
-    public TreeNodeDTO(String key, String title) {
+    public TreeNodeDTO(String key, String title, Object payload) {
         this.key = key;
         this.title = title;
-        this.payload = new HashMap<>();
+        this.payload = payload;
     }
 
     public void setChildren(List<TreeNodeDTO> children) {
@@ -45,7 +45,7 @@ public class TreeNodeDTO {
         return children;
     }
 
-    public Map<String, Object> getPayload() {
+    public Object getPayload() {
         return payload;
     }
 }

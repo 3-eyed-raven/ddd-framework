@@ -8,7 +8,6 @@ import net.jsrbc.ddd.core.view.TreeView;
 import net.jsrbc.ddd.core.view.View;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -27,17 +26,16 @@ public final class TreeNodeDTOAssembler {
      * @return DTO
      */
     public static List<TreeNodeDTO> aggregateToDTOs(List<? extends TreeAggregate<?>> aggregates) {
-        return aggregateToDTOs(aggregates, m -> {});
+        return toTreeNodes(aggregates, TreeAggregate::getTreeInfo, Aggregate::getId, o -> null);
     }
 
     /**
-     * 树形聚合转DTO
+     * 树形聚合转DTO，将原聚合作为负载对象
      * @param aggregates 聚合集合
-     * @param payloadConsumer 负载消费, 可以通过这个消费增加需要传输的项
      * @return DTO
      */
-    public static List<TreeNodeDTO> aggregateToDTOs(List<? extends TreeAggregate<?>> aggregates, Consumer<Map<String, Object>> payloadConsumer) {
-        return toTreeNodes(aggregates, TreeAggregate::getTreeInfo, Aggregate::getId, payloadConsumer);
+    public static <T extends TreeAggregate<?>> List<TreeNodeDTO> aggregateToDTOs(List<T> aggregates, Function<T, ?> payloadMapper) {
+        return toTreeNodes(aggregates, TreeAggregate::getTreeInfo, Aggregate::getId, payloadMapper);
     }
 
     /**
@@ -46,26 +44,24 @@ public final class TreeNodeDTOAssembler {
      * @return DTO
      */
     public static List<TreeNodeDTO> viewToDTOs(List<? extends TreeView<?>> treeViews) {
-        return viewToDTOs(treeViews, m -> {});
+        return toTreeNodes(treeViews, TreeView::getTreeInfo, View::getId, o -> null);
     }
 
     /**
-     * 树形视图转DTO
+     * 树形视图转DTO，将原聚合作为负载对象
      * @param treeViews 树形视图集合
-     * @param payloadConsumer 负载消费, 可以通过这个消费增加需要传输的项
      * @return DTO
      */
-    public static List<TreeNodeDTO> viewToDTOs(List<? extends TreeView<?>> treeViews, Consumer<Map<String, Object>> payloadConsumer) {
-        return toTreeNodes(treeViews, TreeView::getTreeInfo, View::getId, payloadConsumer);
+    public static <T extends TreeView<?>> List<TreeNodeDTO> viewToDTOs(List<T> treeViews, Function<T, ?> payloadMapper) {
+        return toTreeNodes(treeViews, TreeView::getTreeInfo, View::getId, payloadMapper);
     }
 
-    private static <T> List<TreeNodeDTO> toTreeNodes(List<T> list, Function<T, TreeInfo> treeInfoGetter, Function<T, String> keyGetter, Consumer<Map<String, Object>> payloadConsumer) {
+    private static <T> List<TreeNodeDTO> toTreeNodes(List<T> list, Function<T, TreeInfo> treeInfoGetter, Function<T, String> keyGetter, Function<T, ?> payloadMapper) {
         // 1、获取根节点
         List<TreeNodeDTO> roots = list
                 .stream()
                 .filter(t -> treeInfoGetter.apply(t).getParentId() == null)
-                .map(t -> new TreeNodeDTO(keyGetter.apply(t), t.toString()))
-                .peek(t -> payloadConsumer.accept(t.getPayload()))
+                .map(t -> new TreeNodeDTO(keyGetter.apply(t), t.toString(), payloadMapper.apply(t)))
                 .collect(Collectors.toList());
         // 2、获取最高层级
         int maxLevels = list.stream().mapToInt(t -> Optional.ofNullable(treeInfoGetter.apply(t).getAncestorIds()).map(List::size).orElse(0)).max().orElse(0);
@@ -77,8 +73,7 @@ public final class TreeNodeDTOAssembler {
                         .stream()
                         .filter(t -> Objects.equals(treeInfoGetter.apply(t).getParentId(), parentNode.getKey()))
                         .sorted()
-                        .map(t -> new TreeNodeDTO(keyGetter.apply(t), t.toString()))
-                        .peek(t -> payloadConsumer.accept(t.getPayload()))
+                        .map(t -> new TreeNodeDTO(keyGetter.apply(t), t.toString(), payloadMapper.apply(t)))
                         .collect(toList());
                 parentNode.setChildren(children.isEmpty() ? null : children);
             }
