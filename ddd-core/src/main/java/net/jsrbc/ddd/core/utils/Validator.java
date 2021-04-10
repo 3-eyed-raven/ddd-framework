@@ -52,6 +52,7 @@ public class Validator {
      * @param message 不相等的报错信息
      */
     public static <T> void eq(T t1, T t2, String message) {
+        if (t1 == null || t2 == null) return;
         if (!Objects.equals(t1, t2)) {
             throw new IllegalArgumentException(message);
         }
@@ -64,6 +65,7 @@ public class Validator {
      * @param message 相等的报错信息
      */
     public static <T> void neq(T t1, T t2, String message) {
+        if (t1 == null || t2 == null) return;
         if (Objects.equals(t1, t2)) {
             throw new IllegalArgumentException(message);
         }
