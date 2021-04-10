@@ -2,6 +2,7 @@ package net.jsrbc.ddd.core.utils;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -40,6 +41,30 @@ public class Validator {
      */
     public static void match(String text, String regex, String message) {
         if (!text.matches(regex)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    /**
+     * 两值必须相等
+     * @param t1 值1
+     * @param t2 值2
+     * @param message 不相等的报错信息
+     */
+    public static <T> void eq(T t1, T t2, String message) {
+        if (!Objects.equals(t1, t2)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    /**
+     * 两值必须不相等
+     * @param t1 值1
+     * @param t2 值2
+     * @param message 相等的报错信息
+     */
+    public static <T> void neq(T t1, T t2, String message) {
+        if (Objects.equals(t1, t2)) {
             throw new IllegalArgumentException(message);
         }
     }

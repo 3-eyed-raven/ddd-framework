@@ -1,6 +1,8 @@
 package net.jsrbc.ddd.core.model.aggregate;
 
 import net.jsrbc.ddd.core.model.valueobject.TreeInfo;
+import net.jsrbc.ddd.core.utils.Validator;
+
 import java.util.Collections;
 import java.util.Optional;
 
@@ -13,6 +15,11 @@ public abstract class TreeAggregate<T extends TreeAggregate<T>> extends Aggregat
 
     /** 树结构信息 */
     private final TreeInfo treeInfo;
+
+    @Override
+    public void validate() {
+        Validator.neq(this.treeInfo.getParentId(), this.getId(), "不能选择自己作为上级");
+    }
 
     public TreeAggregate(String id, Long version, Long deleted, TreeInfo treeInfo) {
         super(id, version, deleted);
