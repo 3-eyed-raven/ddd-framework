@@ -11,9 +11,14 @@ public class ExecutionResult {
     private final String id;
 
     /** 执行完后的版本号 */
-    private final String version;
+    private final Long version;
 
-    public ExecutionResult(String id, String version) {
+    public ExecutionResult(String id) {
+        this.id = id;
+        this.version = null;
+    }
+
+    public ExecutionResult(String id, Long version) {
         this.id = id;
         this.version = version;
     }
@@ -22,7 +27,7 @@ public class ExecutionResult {
         return id;
     }
 
-    public String getVersion() {
+    public Long getVersion() {
         return version;
     }
 }
