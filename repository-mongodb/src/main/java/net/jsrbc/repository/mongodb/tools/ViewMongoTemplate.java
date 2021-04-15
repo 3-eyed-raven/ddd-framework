@@ -25,8 +25,18 @@ public class ViewMongoTemplate implements ViewMongoOperations {
     private final MongoOperations mongoOperations;
 
     @Override
+    public boolean hasCreated(String id, String viewName) {
+        return this.mongoOperations.exists(query(where("id").is(id)), View.class, viewName);
+    }
+
+    @Override
     public boolean hasUpdated(String id, Long version, String viewName) {
-        return this.mongoOperations.count(query(where("id").is(id).and(VERSION_KEY).gt(version)), View.class, viewName) > 0;
+        return this.mongoOperations.exists(query(where("id").is(id).and(VERSION_KEY).gt(version)), View.class, viewName);
+    }
+
+    @Override
+    public boolean hasDeleted(String id, String viewName) {
+        return !this.mongoOperations.exists(query(where("id").is(id)), View.class, viewName);
     }
 
     @Override

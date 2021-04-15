@@ -12,6 +12,14 @@ import reactor.core.publisher.Mono;
  * @version 1.0
  */
 public interface ReactiveViewMongoOperations {
+
+    /**
+     * 检查视图是否创建
+     * @param id 视图ID
+     * @return 是否创建
+     */
+    Mono<Boolean> hasCreated(String id, String viewName);
+
     /**
      * 判断视图是否更新过
      * @param id 视图主键
@@ -20,6 +28,13 @@ public interface ReactiveViewMongoOperations {
      * @return 是否被更新过
      */
     Mono<Boolean> hasUpdated(String id, Long version, String viewName);
+
+    /**
+     * 检查视图是否被删除
+     * @param id 视图ID
+     * @return 是否被删除
+     */
+    Mono<Boolean> hasDeleted(String id, String viewName);
 
     /**
      * 查询多个视图，不包含被删除的视图
