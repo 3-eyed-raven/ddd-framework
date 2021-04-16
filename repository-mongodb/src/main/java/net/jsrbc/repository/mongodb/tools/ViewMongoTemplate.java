@@ -25,7 +25,7 @@ public class ViewMongoTemplate implements ViewMongoOperations {
     private final MongoOperations mongoOperations;
 
     @Override
-    public CheckResult hasUpdated(String id, Long version, String viewName) {
+    public CheckResult exists(String id, Long version, String viewName) {
         boolean result = this.mongoOperations.exists(query(where("id").is(id).and(VERSION_KEY).gte(version)), View.class, viewName);
         return new CheckResult(result);
     }
