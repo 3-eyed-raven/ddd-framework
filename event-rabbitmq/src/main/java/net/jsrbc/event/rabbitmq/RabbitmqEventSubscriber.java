@@ -11,6 +11,7 @@ import reactor.rabbitmq.Receiver;
 import reactor.rabbitmq.Sender;
 
 import java.nio.charset.StandardCharsets;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -39,8 +40,9 @@ public class RabbitmqEventSubscriber implements EventSubscriber {
         declareAndBindQueue(eventClass)
                 .flatMapMany(this.receiver::consumeManualAck)
                 .subscribe(d -> {
+                    T event = JsonUtils.toObject(new String(d.getBody(), StandardCharsets.UTF_8), eventClass);
                     try {
-                        eventConsumer.accept(JsonUtils.toObject(new String(d.getBody(), StandardCharsets.UTF_8), eventClass));
+                        eventConsumer.accept(event);
                         d.ack();
                     } catch (Throwable e) {
                         LOGGER.error(e);
@@ -49,7 +51,21 @@ public class RabbitmqEventSubscriber implements EventSubscriber {
     }
 
     @Override
-    public void close() throws Exception {
+    public <T extends DomainEvent> void subscribe(Class<T> eventClass, Consumer<T> eventConsumer, BiConsumer<? super Throwable, T> errorHandler) {
+        declareAndBindQueue(eventClass)
+                .flatMapMany(this.receiver::consumeAutoAck)
+                .subscribe(d -> {
+                    T event = JsonUtils.toObject(new String(d.getBody(), StandardCharsets.UTF_8), eventClass);
+                    try {
+                        eventConsumer.accept(event);
+                    } catch (Throwable e) {
+                        errorHandler.accept(e, event);
+                    }
+                });
+    }
+
+    @Override
+    public void close() {
         this.receiver.close();
     }
 
