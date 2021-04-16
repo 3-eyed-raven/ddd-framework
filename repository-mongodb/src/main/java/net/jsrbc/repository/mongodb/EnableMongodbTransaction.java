@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * @author ZZZ on 2021/4/16 15:27
  * @version 1.0
  */
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import(MongoTransactionConfigurer.class)
 public @interface EnableMongodbTransaction {}
