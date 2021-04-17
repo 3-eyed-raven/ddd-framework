@@ -1,7 +1,11 @@
 package net.jsrbc.repository.mongodb.tools;
 
+import net.jsrbc.ddd.core.dto.PageDTO;
+import net.jsrbc.ddd.core.dto.assembler.PageDTOAssembler;
 import net.jsrbc.ddd.core.view.View;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
@@ -27,6 +31,15 @@ public class ReactiveViewMongoTemplate implements ReactiveViewMongoOperations {
         return this.reactiveMongoOperations
                 .exists(query(where("id").is(id).and(VERSION_KEY).gte(version)), View.class, viewName)
                 .map(CheckResult::new);
+    }
+
+    @Override
+    public <T extends View> Mono<PageDTO> findPagination(Criteria criteria, int current, int pageSize, Class<T> viewClass, Sort.Order... orders) {
+        return this.reactiveMongoOperations
+                .find(PageQueryAssembler.toQuery(criteria, current, pageSize, orders), viewClass)
+                .collectList()
+                .zipWith(this.reactiveMongoOperations.count(new Query(criteria), viewClass))
+                .map(t -> new PageDTO(t.getT1(), current, pageSize, t.getT2(), true));
     }
 
     @Override

@@ -1,7 +1,10 @@
 package net.jsrbc.repository.mongodb.tools;
 
+import net.jsrbc.ddd.core.dto.PageDTO;
 import net.jsrbc.ddd.core.view.View;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -33,6 +36,13 @@ public class ViewMongoTemplate implements ViewMongoOperations {
     @Override
     public <T extends View> List<T> find(Query query, Class<T> viewClass) {
         return this.mongoOperations.find(query, viewClass);
+    }
+
+    @Override
+    public <T extends View> PageDTO findPagination(Criteria criteria, int current, int pageSize, Class<T> viewClass, Sort.Order... orders) {
+        List<T> data = this.mongoOperations.find(PageQueryAssembler.toQuery(criteria, current, pageSize, orders), viewClass);
+        long count = this.mongoOperations.count(new Query(criteria), viewClass);
+        return new PageDTO(data, current, pageSize, count, true);
     }
 
     @Override

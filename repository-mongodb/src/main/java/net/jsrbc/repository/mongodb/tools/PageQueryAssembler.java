@@ -1,5 +1,6 @@
 package net.jsrbc.repository.mongodb.tools;
 
+import net.jsrbc.ddd.core.utils.Validator;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -20,9 +21,11 @@ public final class PageQueryAssembler {
      * @return 查询对象
      */
     public static Query toQuery(Criteria criteria, Integer skip, Integer limit, Sort.Order... orders) {
-        Query query = new Query(criteria);
-        if (skip != null) query.skip(skip);
-        if (limit != null) query.limit(limit);
+        Validator.notNull(skip, "skip不能为空");
+        Validator.notNull(limit, "limit不能为空");
+        Query query = new Query(criteria)
+                .skip(skip)
+                .limit(limit);
         if (orders != null && orders.length > 0) query.with(Sort.by(orders));
         return query;
     }
