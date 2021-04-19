@@ -89,7 +89,7 @@ public class SafeMongoTemplate implements SafeMongoOperations {
     @Override
     public void remove(Aggregate aggregate) {
         UpdateResult result = this.mongoOperations.updateMulti(
-                versionQuery(aggregate).addCriteria(where(DELETE_KEY).is(null)),
+                query(where("id").is(aggregate.getId()).and(VERSION_KEY).is(aggregate.getVersion()).and(DELETE_KEY).is(null)),
                 Update.update(DELETE_KEY, System.currentTimeMillis()),
                 aggregate.getClass());
         if (result.getModifiedCount() == 0) {
