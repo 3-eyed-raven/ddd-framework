@@ -4,3 +4,9 @@ plugins {
 
 dependencies {
 }
+
+compileJava {
+    doFirst {
+        options.compilerArgs = ["-parameters"]
+    }
+}
