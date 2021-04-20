@@ -36,7 +36,7 @@ public class ReactiveViewMongoTemplate implements ReactiveViewMongoOperations {
     @Override
     public <T extends View> Mono<PageDTO> findPagination(Criteria criteria, int current, int pageSize, Class<T> viewClass, Sort.Order... orders) {
         return this.reactiveMongoOperations
-                .find(PageQueryAssembler.toQuery(criteria, current, pageSize, orders), viewClass)
+                .find(PageQueryAssembler.toQuery(criteria, current - 1, pageSize, orders), viewClass)
                 .collectList()
                 .zipWith(this.reactiveMongoOperations.count(new Query(criteria), viewClass))
                 .map(t -> new PageDTO(t.getT1(), current, pageSize, t.getT2(), true));

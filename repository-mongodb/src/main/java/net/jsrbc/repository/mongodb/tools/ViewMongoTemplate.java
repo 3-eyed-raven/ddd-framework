@@ -40,7 +40,7 @@ public class ViewMongoTemplate implements ViewMongoOperations {
 
     @Override
     public <T extends View> PageDTO findPagination(Criteria criteria, int current, int pageSize, Class<T> viewClass, Sort.Order... orders) {
-        List<T> data = this.mongoOperations.find(PageQueryAssembler.toQuery(criteria, current, pageSize, orders), viewClass);
+        List<T> data = this.mongoOperations.find(PageQueryAssembler.toQuery(criteria, current - 1, pageSize, orders), viewClass);
         long count = this.mongoOperations.count(new Query(criteria), viewClass);
         return new PageDTO(data, current, pageSize, count, true);
     }

@@ -36,7 +36,7 @@ public interface ReactiveViewMongoOperations {
     /**
      * 分页查询
      * @param criteria 查询条件
-     * @param current 当前页
+     * @param current 当前页，从1开始
      * @param pageSize 页面尺寸
      * @param orders 排序策略
      * @param <T> 视图类型参数

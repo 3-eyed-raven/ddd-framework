@@ -15,7 +15,7 @@ public final class PageQueryAssembler {
     /**
      * 规格转查询对象
      * @param criteria 条件
-     * @param skip 跳过数量
+     * @param skip 跳过数量，从0开始
      * @param limit 限制数量
      * @param orders 排序对象
      * @return 查询对象
