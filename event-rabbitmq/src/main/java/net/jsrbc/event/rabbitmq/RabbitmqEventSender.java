@@ -26,7 +26,7 @@ public class RabbitmqEventSender implements EventSender {
      * 发布消息，能够监听事件是否发送失败
      * 需要订阅者能够处理重复事件
      * @param event 事件
-     * @param onSuccess 确认事件
+     * @param onSuccess 确认事件，异步通知
      * @param onError 出现错误
      */
     @Override
