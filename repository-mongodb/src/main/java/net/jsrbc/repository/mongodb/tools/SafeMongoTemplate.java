@@ -30,6 +30,11 @@ public class SafeMongoTemplate implements SafeMongoOperations {
     private final MongoOperations mongoOperations;
 
     @Override
+    public <T extends Aggregate> boolean exists(Query query, Class<T> aggregateClass) {
+        return this.mongoOperations.exists(query, aggregateClass);
+    }
+
+    @Override
     public <T extends Aggregate> List<T> find(Query query, Class<T> aggregateClass) {
         return this.mongoOperations.find(query.addCriteria(where(DELETE_KEY).is(null)), aggregateClass);
     }

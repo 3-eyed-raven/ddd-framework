@@ -14,6 +14,14 @@ import java.util.function.Consumer;
 public interface SafeMongoOperations {
 
     /**
+     * 检查是否存在
+     * @param query 查询条件
+     * @param <T> 聚合类型参数
+     * @return 是否包含
+     */
+    <T extends Aggregate> boolean exists(Query query, Class<T> aggregateClass);
+
+    /**
      * 查询多个聚合，不包含被删除的聚合
      * @param query 查询条件
      * @param aggregateClass 聚合类型

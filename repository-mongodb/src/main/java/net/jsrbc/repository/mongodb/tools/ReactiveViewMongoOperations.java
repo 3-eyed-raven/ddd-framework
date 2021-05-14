@@ -17,12 +17,11 @@ import reactor.core.publisher.Mono;
 public interface ReactiveViewMongoOperations {
     /**
      * 检查是否存在
-     * @param id 视图主键
-     * @param version 版本
+     * @param query 查询条件
      * @param viewName 视图名称，对应视图类名
      * @return 是否被更新过
      */
-    Mono<CheckResult> exists(String id, Long version, String viewName);
+    Mono<Boolean> exists(Query query, String viewName);
 
     /**
      * 查询多个视图，不包含被删除的视图

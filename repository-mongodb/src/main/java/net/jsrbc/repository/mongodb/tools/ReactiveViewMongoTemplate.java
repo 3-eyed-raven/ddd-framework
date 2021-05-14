@@ -26,10 +26,8 @@ public class ReactiveViewMongoTemplate implements ReactiveViewMongoOperations {
     private final ReactiveMongoOperations reactiveMongoOperations;
 
     @Override
-    public Mono<CheckResult> exists(String id, Long version, String viewName) {
-        return this.reactiveMongoOperations
-                .exists(query(where("id").is(id).and(VERSION_KEY).gte(version)), View.class, viewName)
-                .map(CheckResult::new);
+    public Mono<Boolean> exists(Query query, String viewName) {
+        return this.reactiveMongoOperations.exists(query, View.class, viewName);
     }
 
     @Override

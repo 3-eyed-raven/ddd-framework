@@ -18,12 +18,11 @@ import java.util.function.Consumer;
 public interface ViewMongoOperations {
     /**
      * 检查是否存在
-     * @param id 视图主键
-     * @param version 版本
+     * @param query 查询条件
      * @param viewName 视图名称，对应视图类名
      * @return 是否被更新过
      */
-    CheckResult exists(String id, Long version, String viewName);
+    <T extends View> boolean exists(Query query, String viewName);
 
     /**
      * 查询多个视图，不包含被删除的视图
