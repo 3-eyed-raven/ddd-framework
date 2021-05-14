@@ -75,6 +75,13 @@ public interface ReactiveViewMongoOperations {
     <T extends View> Mono<Void> remove(String id, Class<T> viewClass);
 
     /**
+     * 删除视图，注意：会删除多条记录
+     * @param query 查询条件
+     * @param viewClass 视图类
+     */
+    <T extends View> Mono<Void> remove(Query query, Class<T> viewClass);
+
+    /**
      * 更新多个文档
      * @param query 查询条件
      * @param update 更新内容

@@ -61,17 +61,22 @@ public class ReactiveViewMongoTemplate implements ReactiveViewMongoOperations {
                 .flatMap(b -> b
                         ? this.reactiveMongoOperations.findAndReplace(query(where("id").is(view.getId()).and(VERSION_KEY).lt(view.getVersion())), view)
                         : this.reactiveMongoOperations.insert(view))
-                .then(Mono.empty());
+                .then();
     }
 
     @Override
     public <T extends View> Mono<Void> remove(String id, Class<T> viewClass) {
-        return this.reactiveMongoOperations.remove(query(where("id").is(id)), viewClass).then(Mono.empty());
+        return this.reactiveMongoOperations.remove(query(where("id").is(id)), viewClass).then();
+    }
+
+    @Override
+    public <T extends View> Mono<Void> remove(Query query, Class<T> viewClass) {
+        return this.reactiveMongoOperations.remove(query, viewClass).then();
     }
 
     @Override
     public <T extends View> Mono<Void> update(Query query, Update update, Class<T> viewClass) {
-        return this.reactiveMongoOperations.updateMulti(query, update, viewClass).then(Mono.empty());
+        return this.reactiveMongoOperations.updateMulti(query, update, viewClass).then();
     }
 
     public ReactiveViewMongoTemplate(ReactiveMongoOperations reactiveMongoOperations) {

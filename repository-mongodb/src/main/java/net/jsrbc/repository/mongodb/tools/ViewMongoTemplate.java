@@ -76,6 +76,11 @@ public class ViewMongoTemplate implements ViewMongoOperations {
     }
 
     @Override
+    public <T extends View> void remove(Query query, Class<T> viewClass) {
+        this.mongoOperations.remove(query, viewClass);
+    }
+
+    @Override
     public <T extends View> void update(Query query, Update update, Class<T> viewClass) {
         this.mongoOperations.updateMulti(query, update, viewClass);
     }
