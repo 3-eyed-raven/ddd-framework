@@ -4,6 +4,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import net.jsrbc.repository.mongodb.interpreter.IndexExpression;
 import net.jsrbc.repository.mongodb.interpreter.IndexExpressionParser;
+import net.jsrbc.repository.mongodb.tools.SSLHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ import java.util.Map;
 @Configuration
 @ConditionalOnMissingClass
 @EnableConfigurationProperties(MongoProperties.class)
-public class MongoConfigure extends AbstractMongoClientConfiguration {
+public class MongoConfigurer extends AbstractMongoClientConfiguration {
 
     private final MongoProperties mongoProperties;
 
@@ -36,9 +37,9 @@ public class MongoConfigure extends AbstractMongoClientConfiguration {
                         customConversions(),
                         mongoMappingContext(customConversions())));
         // 创建集合
-        ensureCollections(mongoTemplate, mongoProperties.getCollections());
+        ensureCollections(mongoTemplate, this.mongoProperties.getCollections());
         // 创建索引
-        ensureIndex(mongoTemplate, mongoProperties.getIndexes());
+        ensureIndex(mongoTemplate, this.mongoProperties.getIndexes());
     }
 
     @Override
@@ -48,10 +49,11 @@ public class MongoConfigure extends AbstractMongoClientConfiguration {
 
     @Override
     protected void configureClientSettings(MongoClientSettings.Builder builder) {
-        builder.applyConnectionString(new ConnectionString(mongoProperties.getConnectionString()));
+        SSLHelper.setMongoSSLEnvironment(this.mongoProperties);
+        builder.applyConnectionString(new ConnectionString(this.mongoProperties.getConnectionString()));
     }
 
-    public MongoConfigure(MongoProperties mongoProperties) {
+    public MongoConfigurer(MongoProperties mongoProperties) {
         this.mongoProperties = mongoProperties;
     }
 

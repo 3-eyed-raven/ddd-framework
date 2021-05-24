@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
  * @author ZZZ on 2021/4/16 15:29
  * @version 1.0
  */
-@ConditionalOnBean(MongoConfigure.class)
+@ConditionalOnBean(MongoConfigurer.class)
 @Configuration
 public class MongoTransactionConfigurer {
 

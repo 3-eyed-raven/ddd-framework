@@ -17,6 +17,18 @@ public class MongoProperties {
     /** mongodb连接字符串 */
     private final String connectionString;
 
+    /** 信任库 */
+    private final String trustStore;
+
+    /** 受信任的秘钥库 */
+    private final String trustStorePassword;
+
+    /** 秘钥库 */
+    private final String keyStore;
+
+    /** 秘钥库密码 */
+    private final String keyStorePassword;
+
     /** 数据库名 */
     private final String databaseName;
 
@@ -26,8 +38,14 @@ public class MongoProperties {
     /** 需要的索引 */
     private final Map<String, String> indexes;
 
-    public MongoProperties(String connectionString, String databaseName, String collections, Map<String, String> indexes) {
+    public MongoProperties(String connectionString, String trustStore, String trustStorePassword,
+                           String keyStore, String keyStorePassword, String databaseName,
+                           String collections, Map<String, String> indexes) {
         this.connectionString = connectionString;
+        this.trustStore = trustStore;
+        this.trustStorePassword = trustStorePassword;
+        this.keyStore = keyStore;
+        this.keyStorePassword = keyStorePassword;
         this.databaseName = databaseName;
         this.collections = collections;
         this.indexes = indexes;
@@ -35,6 +53,22 @@ public class MongoProperties {
 
     public String getConnectionString() {
         return connectionString;
+    }
+
+    public String getTrustStore() {
+        return trustStore;
+    }
+
+    public String getTrustStorePassword() {
+        return trustStorePassword;
+    }
+
+    public String getKeyStore() {
+        return keyStore;
+    }
+
+    public String getKeyStorePassword() {
+        return keyStorePassword;
     }
 
     public String getDatabaseName() {

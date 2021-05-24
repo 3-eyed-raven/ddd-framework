@@ -4,6 +4,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClients;
 import net.jsrbc.repository.mongodb.interpreter.IndexExpressionParser;
+import net.jsrbc.repository.mongodb.tools.SSLHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +49,7 @@ public class ReactiveMongoConfigurer extends AbstractReactiveMongoConfiguration 
 
     @Override
     protected void configureClientSettings(MongoClientSettings.Builder builder) {
+        SSLHelper.setMongoSSLEnvironment(this.mongoProperties);
         builder.applyConnectionString(new ConnectionString(mongoProperties.getConnectionString()));
     }
 

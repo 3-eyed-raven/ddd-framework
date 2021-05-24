@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(MongoConfigure.class)
+@Import(MongoConfigurer.class)
 public @interface EnableMongodb {}
