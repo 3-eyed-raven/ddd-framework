@@ -29,6 +29,7 @@ public final class TreeNodeDTOAssembler {
     /**
      * 树形视图转DTO，将原聚合作为负载对象
      * @param treeViews 树形视图集合
+     * @param payloadMapper 节点负载数据
      * @return DTO
      */
     public static <T extends TreeView<?>> List<TreeNodeDTO> viewToDTOs(List<T> treeViews, Function<T, ?> payloadMapper) {
