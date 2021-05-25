@@ -1,6 +1,6 @@
 package net.jsrbc.ddd.core.view;
 
-import net.jsrbc.ddd.core.model.valueobject.TreeInfo;
+import java.util.List;
 
 /**
  * 树形视图
@@ -10,14 +10,21 @@ import net.jsrbc.ddd.core.model.valueobject.TreeInfo;
 public abstract class TreeView<T extends TreeView<T>> extends View implements Comparable<T> {
 
     /** 树结构信息 */
-    private final TreeInfo treeInfo;
+    private final String parentId;
 
-    public TreeView(String id, Long version, Long updateTime, TreeInfo treeInfo) {
+    private final List<String> ancestorIds;
+
+    public TreeView(String id, Long version, Long updateTime, String parentId, List<String> ancestorIds) {
         super(id, version, updateTime);
-        this.treeInfo = treeInfo;
+        this.parentId = parentId;
+        this.ancestorIds = ancestorIds;
     }
 
-    public TreeInfo getTreeInfo() {
-        return treeInfo;
+    public String getParentId() {
+        return parentId;
+    }
+
+    public List<String> getAncestorIds() {
+        return ancestorIds;
     }
 }
