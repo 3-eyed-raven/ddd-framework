@@ -50,6 +50,11 @@ public class ReactiveViewMongoTemplate implements ReactiveViewMongoOperations {
     }
 
     @Override
+    public <T extends View> Mono<T> findById(String id, Class<T> viewClass) {
+        return this.reactiveMongoOperations.findById(id, viewClass);
+    }
+
+    @Override
     public <T extends View> Mono<T> findOne(Query query, Class<T> viewClass) {
         return this.reactiveMongoOperations.findOne(query, viewClass);
     }

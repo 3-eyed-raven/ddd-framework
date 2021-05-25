@@ -62,6 +62,11 @@ public class SafeMongoTemplate implements SafeMongoOperations {
     }
 
     @Override
+    public <T extends Aggregate> T findById(String id, Class<T> aggregateClass) {
+        return this.mongoOperations.findById(id, aggregateClass);
+    }
+
+    @Override
     public <T extends Aggregate> T findOne(Query query, Class<T> aggregateClass) {
         return this.mongoOperations.findOne(query.addCriteria(where(DELETE_KEY).is(null)), aggregateClass);
     }

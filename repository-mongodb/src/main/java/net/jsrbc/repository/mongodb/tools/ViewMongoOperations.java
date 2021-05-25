@@ -63,6 +63,15 @@ public interface ViewMongoOperations {
     <T extends View> void forEach(Query query, Class<T> viewClass, Consumer<T> consumer);
 
     /**
+     * 通过ID查询
+     * @param id ID
+     * @param <T> 聚合类型参数
+     * @param viewClass 视图类型
+     * @return 查询结果
+     */
+    <T extends View> T findById(String id, Class<T> viewClass);
+
+    /**
      * 查找一个视图，不包含被删除的视图
      * @param query 查询条件
      * @param viewClass 视图类型

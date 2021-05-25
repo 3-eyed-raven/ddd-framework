@@ -57,6 +57,11 @@ public class ViewMongoTemplate implements ViewMongoOperations {
     }
 
     @Override
+    public <T extends View> T findById(String id, Class<T> viewClass) {
+        return this.mongoOperations.findById(id, viewClass);
+    }
+
+    @Override
     public <T extends View> T findOne(Query query, Class<T> viewClass) {
         return this.mongoOperations.findOne(query, viewClass);
     }

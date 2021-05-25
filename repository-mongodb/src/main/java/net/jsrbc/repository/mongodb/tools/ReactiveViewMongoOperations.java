@@ -53,6 +53,15 @@ public interface ReactiveViewMongoOperations {
     <T extends View> Mono<Long> count(Query query, Class<T> viewClass);
 
     /**
+     * 通过ID查询
+     * @param id ID
+     * @param <T> 聚合类型参数
+     * @param viewClass 视图类型
+     * @return 查询结果
+     */
+    <T extends View> Mono<T> findById(String id, Class<T> viewClass);
+
+    /**
      * 查找一个视图，不包含被删除的视图
      * @param query 查询条件
      * @param viewClass 视图类型

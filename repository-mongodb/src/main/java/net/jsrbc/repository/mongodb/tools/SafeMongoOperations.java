@@ -67,6 +67,15 @@ public interface SafeMongoOperations {
     <T extends Aggregate> void forEach(Query query, Class<T> aggregateClass, Consumer<T> consumer);
 
     /**
+     * 通过ID查询
+     * @param id ID
+     * @param aggregateClass 聚合类型
+     * @param <T> 聚合类型参数
+     * @return 查询结果
+     */
+    <T extends Aggregate> T findById(String id, Class<T> aggregateClass);
+
+    /**
      * 查找一个聚合，不包含被删除的聚合
      * @param query 查询条件
      * @param aggregateClass 聚合类型
