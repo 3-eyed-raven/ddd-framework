@@ -20,7 +20,7 @@ public class TransactionExecutor {
      * @param executor 执行回调
      */
     public void execute(Executor executor) {
-        transactionTemplate.executeWithoutResult(status -> {
+        this.transactionTemplate.executeWithoutResult(status -> {
             try {
                 executor.execute();
             } catch (Throwable e) {
