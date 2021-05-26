@@ -1,7 +1,7 @@
 package net.jsrbc.ddd.core.dto.assembler;
 
 import net.jsrbc.ddd.core.dto.PageDTO;
-import net.jsrbc.ddd.core.model.spec.Specification;
+import net.jsrbc.ddd.core.dto.PageQueryDTO;
 
 import java.util.List;
 
@@ -13,16 +13,16 @@ import java.util.List;
 public final class PageDTOAssembler {
     /**
      * 转换为分页数据
-     * @param spec 查询规格
+     * @param pageQueryDTO 分页查询参数
      * @param data 查询出的数据
      * @param total 数据总量
      * @return 分页数据
      */
-    public static PageDTO toDTO(Specification spec, List<?> data, long total) {
-        if (spec.getSkip() == null || spec.getSize() == null) {
+    public static PageDTO toDTO(PageQueryDTO pageQueryDTO, List<?> data, long total) {
+        if (pageQueryDTO.getCurrent() == null || pageQueryDTO.getPageSize() == null) {
             return new PageDTO(data, 0, 0, 0L, false);
         } else {
-            return new PageDTO(data, spec.getSkip() / spec.getSize(), spec.getSize(), total, true);
+            return new PageDTO(data, pageQueryDTO.getCurrent(), pageQueryDTO.getPageSize(), total, true);
         }
     }
 
