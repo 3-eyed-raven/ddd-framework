@@ -10,6 +10,12 @@ import java.util.function.Supplier;
  */
 public abstract class Aggregate {
 
+    /** 版本控制键名 */
+    public static final String VERSION_KEY = "version";
+
+    /** 逻辑删除标记键名 */
+    public static final String DELETE_KEY = "deleted";
+
     /** 聚合根唯一标识 */
     private String id;
 

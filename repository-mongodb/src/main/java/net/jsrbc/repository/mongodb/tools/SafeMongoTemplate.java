@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static net.jsrbc.ddd.core.model.aggregate.Aggregate.DELETE_KEY;
+import static net.jsrbc.ddd.core.model.aggregate.Aggregate.VERSION_KEY;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -19,12 +21,6 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  * @version 1.0
  */
 public class SafeMongoTemplate implements SafeMongoOperations {
-
-    /** 逻辑删除键 */
-    private final static String DELETE_KEY = "deleted";
-
-    /** 版本控制键 */
-    private final static String VERSION_KEY = "version";
 
     /** mongo操作 */
     private final MongoOperations mongoOperations;

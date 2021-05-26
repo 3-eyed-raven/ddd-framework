@@ -1,6 +1,6 @@
 package net.jsrbc.repository.mongodb.tools;
 
-import net.jsrbc.ddd.core.dto.PageDTO;
+import net.jsrbc.ddd.core.dto.PagingDTO;
 import net.jsrbc.ddd.core.view.View;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static net.jsrbc.ddd.core.model.aggregate.Aggregate.VERSION_KEY;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -21,9 +22,6 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  * @version 1.0
  */
 public class ViewMongoTemplate implements ViewMongoOperations {
-
-    /** 版本控制键 */
-    private final static String VERSION_KEY = "version";
 
     private final MongoOperations mongoOperations;
 
@@ -38,10 +36,10 @@ public class ViewMongoTemplate implements ViewMongoOperations {
     }
 
     @Override
-    public <T extends View> PageDTO findPagination(Criteria criteria, int current, int pageSize, Class<T> viewClass, Sort.Order... orders) {
+    public <T extends View> PagingDTO findPagination(Criteria criteria, int current, int pageSize, Class<T> viewClass, Sort.Order... orders) {
         List<T> data = this.mongoOperations.find(PageQueryAssembler.toQuery(criteria, current - 1, pageSize, orders), viewClass);
         long count = this.mongoOperations.count(new Query(criteria), viewClass);
-        return new PageDTO(data, current, pageSize, count, true);
+        return new PagingDTO(data, current, pageSize, count, true);
     }
 
     @Override

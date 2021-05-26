@@ -7,7 +7,7 @@ import java.util.List;
  * @author ZZZ on 2020/7/30 22:20
  * @version 1.0
  */
-public class PageDTO {
+public class PagingDTO {
 
     /** 数据 */
     private final List<?> data;
@@ -24,7 +24,7 @@ public class PageDTO {
     /** 是否查询成功 */
     private final Boolean success;
 
-    public PageDTO(List<?> data, Integer current, Integer pageSize, Long total, Boolean success) {
+    public PagingDTO(List<?> data, Integer current, Integer pageSize, Long total, Boolean success) {
         this.data = data;
         this.current = current;
         this.pageSize = pageSize;

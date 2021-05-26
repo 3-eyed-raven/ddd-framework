@@ -1,6 +1,6 @@
 package net.jsrbc.repository.mongodb.tools;
 
-import net.jsrbc.ddd.core.dto.PageDTO;
+import net.jsrbc.ddd.core.dto.PagingDTO;
 import net.jsrbc.ddd.core.view.View;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -41,7 +41,7 @@ public interface ReactiveViewMongoOperations {
      * @param <T> 视图类型参数
      * @return 分页数据
      */
-    <T extends View> Mono<PageDTO> findPagination(Criteria criteria, int current, int pageSize, Class<T> viewClass, Sort.Order... orders);
+    <T extends View> Mono<PagingDTO> findPagination(Criteria criteria, int current, int pageSize, Class<T> viewClass, Sort.Order... orders);
 
     /**
      * 统计数量，不包含被删除的视图
