@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -20,13 +20,14 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.data.mongodb.core.query.Update.update;
 
 /**
- * mongodb版事件存储
- * @author ZZZ on 2021-03-24 16:38
+ * 响应式Mongo仓库
+ * @author ZZZ on 2021/5/26 20:15
  * @version 1.0
  */
-@ConditionalOnBean({EventSender.class, MongoOperations.class})
+@ConditionalOnBean({EventSender.class, ReactiveMongoOperations.class})
 @Configuration
-public class MongoEventStore extends AbstractEventStore {
+public class ReactiveMongoEventStore extends AbstractEventStore {
+
 
     /** 日志记录 */
     private final static Logger LOGGER = LogManager.getLogger();
@@ -35,7 +36,7 @@ public class MongoEventStore extends AbstractEventStore {
     private final static Consumer<? super Throwable> ERROR_HANDLER = LOGGER::error;
 
     /** 数据操作 */
-    private final MongoOperations mongoOperations;
+    private final ReactiveMongoOperations reactiveMongoOperations;
 
     @PostConstruct
     @Override
@@ -55,50 +56,50 @@ public class MongoEventStore extends AbstractEventStore {
 
     @Override
     protected DomainEvent getAndMarkSending(Long deliveryTime) {
-        return this.mongoOperations.findAndModify(
+        return this.reactiveMongoOperations.findAndModify(
                 query(where(EVENT_STATUS_FIELD).is(PENDING)),
                 update(EVENT_STATUS_FIELD, SENDING).set(DELIVERY_TIME, deliveryTime),
                 DomainEvent.class,
-                EVENT_STORE);
+                EVENT_STORE).block();
     }
 
     @Override
     protected void markPending(DomainEvent event) {
-        this.mongoOperations.updateMulti(query(where("id").is(event.getId())),
+        this.reactiveMongoOperations.updateMulti(query(where("id").is(event.getId())),
                 update(EVENT_STATUS_FIELD, PENDING),
                 DomainEvent.class,
-                EVENT_STORE);
+                EVENT_STORE).block();
     }
 
     @Override
     protected void markSuccess(DomainEvent event) {
-        this.mongoOperations.updateMulti(query(where("id").is(event.getId())),
+        this.reactiveMongoOperations.updateMulti(query(where("id").is(event.getId())),
                 update(EVENT_STATUS_FIELD, SUCCESS),
                 DomainEvent.class,
-                EVENT_STORE);
+                EVENT_STORE).block();
     }
 
     @Override
     protected void markSendingTimeoutToPending(Long deliveryExpiredTime) {
-        this.mongoOperations.updateMulti(
+        this.reactiveMongoOperations.updateMulti(
                 query(where(EVENT_STATUS_FIELD).is(SENDING).and(DELIVERY_TIME).lt(deliveryExpiredTime)),
                 update(EVENT_STATUS_FIELD, PENDING),
                 DomainEvent.class,
-                EVENT_STORE);
+                EVENT_STORE).block();
     }
 
     @Override
     protected void deleteSuccessEvent() {
-        this.mongoOperations.remove(where(EVENT_STATUS_FIELD).is(SUCCESS), EVENT_STORE);
+        this.reactiveMongoOperations.remove(where(EVENT_STATUS_FIELD).is(SUCCESS), EVENT_STORE).block();
     }
 
     @Override
     protected void insertEvent(DomainEvent event) {
-        mongoOperations.insert(event, EVENT_STORE);
+        this.reactiveMongoOperations.insert(event, EVENT_STORE).block();
     }
 
-    public MongoEventStore(EventSender eventSender, MongoOperations mongoOperations) {
+    public ReactiveMongoEventStore(EventSender eventSender, ReactiveMongoOperations reactiveMongoOperations) {
         super(eventSender);
-        this.mongoOperations = mongoOperations;
+        this.reactiveMongoOperations = reactiveMongoOperations;
     }
 }
