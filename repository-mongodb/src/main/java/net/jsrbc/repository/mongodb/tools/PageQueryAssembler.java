@@ -15,17 +15,17 @@ public final class PageQueryAssembler {
     /**
      * 规格转查询对象
      * @param criteria 条件
-     * @param skip 跳过数量，从0开始
-     * @param limit 限制数量
+     * @param current 当前页，从1开始
+     * @param pageSize 页面尺寸
      * @param orders 排序对象
      * @return 查询对象
      */
-    public static Query toQuery(Criteria criteria, Integer skip, Integer limit, Sort.Order... orders) {
-        Validator.notNull(skip, "skip不能为空");
-        Validator.notNull(limit, "limit不能为空");
+    public static Query toQuery(Criteria criteria, Integer current, Integer pageSize, Sort.Order... orders) {
+        Validator.notNull(current, "current 不能为空");
+        Validator.notNull(pageSize, "pageSize 不能为空");
         Query query = new Query(criteria)
-                .skip(skip)
-                .limit(limit);
+                .skip((long) (current - 1) * pageSize)
+                .limit(pageSize);
         if (orders != null && orders.length > 0) query.with(Sort.by(orders));
         return query;
     }
