@@ -15,4 +15,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import(ReactiveMongoTransactionConfigurer.class)
-public @interface EnableReactiveMongoTransaction {}
+public @interface EnableReactiveMongodbTransaction {}
