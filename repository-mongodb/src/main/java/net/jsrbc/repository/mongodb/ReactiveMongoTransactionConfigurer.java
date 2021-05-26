@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.ReactiveMongoTransactionManager;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 
 /**
  * 响应式Mongo事务配置
@@ -20,4 +21,9 @@ public class ReactiveMongoTransactionConfigurer {
         return new ReactiveMongoTransactionManager(reactiveMongoDatabaseFactory);
     }
 
+    @Bean
+    public ReactiveTransactionExecutor reactiveTransactionExecutor(ReactiveMongoTemplate reactiveMongoTemplate,
+                                                                   ReactiveMongoTransactionManager reactiveMongoTransactionManager) {
+        return new ReactiveTransactionExecutor(reactiveMongoTemplate, reactiveMongoTransactionManager);
+    }
 }
