@@ -2,10 +2,8 @@ package net.jsrbc.repository.mongodb;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.reactivestreams.client.MongoClients;
 import net.jsrbc.repository.mongodb.interpreter.IndexExpressionParser;
 import net.jsrbc.repository.mongodb.tools.SSLHelper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
@@ -24,7 +22,6 @@ import java.util.Map;
  * @version 1.0
  */
 @Configuration
-@ConditionalOnClass(MongoClients.class)
 @EnableConfigurationProperties(MongoProperties.class)
 public class ReactiveMongoConfigurer extends AbstractReactiveMongoConfiguration {
 

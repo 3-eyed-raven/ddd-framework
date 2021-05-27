@@ -9,10 +9,16 @@ import java.util.List;
  */
 public abstract class TreeView<T extends TreeView<T>> extends View implements Comparable<T> {
 
-    /** 树结构信息 */
-    private final String parentId;
+    /** 父节点键名 */
+    public final static String PARENT_KEY = "parentId";
 
-    private final List<String> ancestorIds;
+    /** 祖先节点键名 */
+    public final static String ANCESTOR_KEY = "ancestorIds";
+
+    /** 树结构信息 */
+    private String parentId;
+
+    private List<String> ancestorIds;
 
     public TreeView(String id, Long version, Long updateTime, String parentId, List<String> ancestorIds) {
         super(id, version, updateTime);
@@ -24,7 +30,15 @@ public abstract class TreeView<T extends TreeView<T>> extends View implements Co
         return parentId;
     }
 
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
     public List<String> getAncestorIds() {
         return ancestorIds;
+    }
+
+    public void setAncestorIds(List<String> ancestorIds) {
+        this.ancestorIds = ancestorIds;
     }
 }

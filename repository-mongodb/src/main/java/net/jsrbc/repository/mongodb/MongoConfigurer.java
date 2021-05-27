@@ -5,7 +5,6 @@ import com.mongodb.MongoClientSettings;
 import net.jsrbc.repository.mongodb.interpreter.IndexExpression;
 import net.jsrbc.repository.mongodb.interpreter.IndexExpressionParser;
 import net.jsrbc.repository.mongodb.tools.SSLHelper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
@@ -24,7 +23,6 @@ import java.util.Map;
  * @version 1.0
  */
 @Configuration
-@ConditionalOnMissingClass
 @EnableConfigurationProperties(MongoProperties.class)
 public class MongoConfigurer extends AbstractMongoClientConfiguration {
 
