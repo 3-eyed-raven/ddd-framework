@@ -26,12 +26,12 @@ public class TreeViewSaveHelper {
      * 保存树节点视图
      * @param treeView 树节点视图
      */
-    public Mono<Void> save(TreeView<?> treeView) {
+    public Mono<Void> saveAndUpdateAncestor(TreeView<?> treeView) {
         return updateAncestorIds(treeView)
                 .doOnNext(t -> this.reactiveViewMongoOperations
                         .findById(t.getId(), t.getClass())
                         .filter(o -> !Objects.equals(o.getParentId(), t.getParentId())) // 先判断父节点有无修改，有修改先更新子节点的祖先元素
-                        .flatMapMany(this::changeSubNodeAncestorIds)
+                        .flatMapMany(o -> this.changeSubNodeAncestorIds(t))
                         .blockLast())
                 .flatMap(this.reactiveViewMongoOperations::save);
     }
@@ -41,6 +41,7 @@ public class TreeViewSaveHelper {
     }
 
     /** 更新祖先节点 */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Mono<TreeView<?>> updateAncestorIds(TreeView<?> treeView) {
         return Mono.defer(() -> { // 然后进行保存
             if (treeView.getParentId() != null) {
@@ -60,6 +61,7 @@ public class TreeViewSaveHelper {
     }
 
     /** 修改子节点的祖先节点 */
+    @SuppressWarnings({"unchecked"})
     private Flux<Void> changeSubNodeAncestorIds(TreeView<?> treeView) {
         return this.reactiveViewMongoOperations
                 .find(query(where(TreeView.ANCESTOR_KEY).is(treeView.getId())), treeView.getClass())
