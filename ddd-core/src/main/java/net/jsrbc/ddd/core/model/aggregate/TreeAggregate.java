@@ -5,7 +5,7 @@ package net.jsrbc.ddd.core.model.aggregate;
  * @author ZZZ on 2021/5/27 16:18
  * @version 1.0
  */
-public abstract class TreeAggregate<T extends TreeAggregate<T>> extends Aggregate implements Comparable<T> {
+public abstract class TreeAggregate extends Aggregate {
 
     /** 父级ID */
     private final String parentId;
