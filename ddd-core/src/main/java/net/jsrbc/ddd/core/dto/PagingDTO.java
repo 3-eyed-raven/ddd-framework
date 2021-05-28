@@ -12,7 +12,7 @@ public class PagingDTO {
     /** 数据 */
     private final List<?> data;
 
-    /** 当前页 */
+    /** 当前页，从1开始 */
     private final Integer current;
 
     /** 页面尺寸 */

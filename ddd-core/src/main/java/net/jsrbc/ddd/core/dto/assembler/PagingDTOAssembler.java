@@ -10,7 +10,7 @@ import java.util.List;
  * @author ZZZ on 2020/7/31 9:53
  * @version 1.0
  */
-public final class PageDTOAssembler {
+public final class PagingDTOAssembler {
     /**
      * 转换为分页数据
      * @param pagingParameter 分页查询参数
@@ -35,5 +35,5 @@ public final class PageDTOAssembler {
         return new PagingDTO(data, null, null, null, true);
     }
 
-    private PageDTOAssembler() {}
+    private PagingDTOAssembler() {}
 }
