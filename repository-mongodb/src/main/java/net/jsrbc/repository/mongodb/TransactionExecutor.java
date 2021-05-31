@@ -19,10 +19,10 @@ public class TransactionExecutor {
      * 事务执行操作
      * @param executor 执行回调
      */
-    public void execute(Executor executor) {
-        this.transactionTemplate.executeWithoutResult(status -> {
+    public <T> T execute(Executor<T> executor) {
+        return this.transactionTemplate.execute(status -> {
             try {
-                executor.execute();
+                return executor.execute();
             } catch (Throwable e) {
                 if (e instanceof RuntimeException) {
                     throw (RuntimeException) e;
@@ -34,8 +34,8 @@ public class TransactionExecutor {
     }
 
     @FunctionalInterface
-    public interface Executor {
-        void execute() throws Throwable;
+    public interface Executor<T> {
+        T execute() throws Throwable;
     }
 
     public TransactionExecutor(MongoTemplate mongoTemplate, MongoTransactionManager transactionManager) {

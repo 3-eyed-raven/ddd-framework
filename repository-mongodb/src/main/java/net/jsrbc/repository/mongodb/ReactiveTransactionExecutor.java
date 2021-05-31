@@ -20,15 +20,14 @@ public class ReactiveTransactionExecutor {
      * 事务执行操作
      * @param executor 执行回调
      */
-    public Mono<Void> execute(Executor executor) {
+    public <T> Mono<T> execute(Executor<T> executor) {
         return executor.execute()
-                .as(this.transactionalOperator::transactional)
-                .then();
+                .as(this.transactionalOperator::transactional);
     }
 
     @FunctionalInterface
-    public interface Executor {
-        Mono<?> execute();
+    public interface Executor<T> {
+        Mono<T> execute();
     }
 
     public ReactiveTransactionExecutor(ReactiveMongoTemplate reactiveMongoTemplate,
