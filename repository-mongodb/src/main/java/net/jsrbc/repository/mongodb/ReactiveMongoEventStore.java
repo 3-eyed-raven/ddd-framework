@@ -26,7 +26,6 @@ import static org.springframework.data.mongodb.core.query.Update.update;
 @Configuration
 public class ReactiveMongoEventStore extends AbstractEventStore {
 
-
     /** 日志记录 */
     private final static Logger LOGGER = LogManager.getLogger();
 
