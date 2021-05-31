@@ -3,7 +3,7 @@ package net.jsrbc.ddd.core.model.service;
 import net.jsrbc.ddd.core.model.aggregate.TreeAggregate;
 import net.jsrbc.ddd.core.model.repository.Repository;
 
-import java.util.Objects;
+import static net.jsrbc.ddd.core.utils.Validator.*;
 
 /**
  * 循环引用检测服务
@@ -18,18 +18,15 @@ public final class CircularReferenceCheckService {
      */
     public static void check(TreeAggregate target, Repository<? extends TreeAggregate> repository) {
         // 检测自引用
-        if (Objects.equals(target.getId(), target.getParentId())) {
-            throw new IllegalArgumentException("自己不能作为自己的上级");
-        }
+        neq(target.getId(), target.getParentId(), "自己不能作为自己的上级");
         // 检测循环引用
         String parentId = target.getParentId();
         while (parentId != null) {
             // 查找父级
             TreeAggregate pMenu = repository.findById(parentId);
+            notNull(pMenu, "");
             parentId = pMenu.getParentId();
-            if (Objects.equals(target.getId(), parentId)) {
-                throw new IllegalArgumentException("父级不能为自己的子级");
-            }
+            neq(target.getId(), parentId, "父级不能为自己的子级");
         }
     }
 
