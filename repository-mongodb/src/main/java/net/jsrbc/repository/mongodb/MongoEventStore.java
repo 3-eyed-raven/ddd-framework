@@ -5,7 +5,6 @@ import net.jsrbc.ddd.core.model.event.DomainEvent;
 import net.jsrbc.ddd.core.model.event.EventSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoOperations;
 
@@ -24,7 +23,6 @@ import static org.springframework.data.mongodb.core.query.Update.update;
  * @author ZZZ on 2021-03-24 16:38
  * @version 1.0
  */
-@ConditionalOnBean({EventSender.class, MongoOperations.class})
 @Configuration
 public class MongoEventStore extends AbstractEventStore {
 
