@@ -18,6 +18,7 @@ public abstract class TreeView<T extends TreeView<T>> extends View implements Co
     /** 树结构信息 */
     private String parentId;
 
+    /** 祖先节点 */
     private List<String> ancestorIds;
 
     public TreeView(String id, Long version, Long updateTime, String parentId, List<String> ancestorIds) {

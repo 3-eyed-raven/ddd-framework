@@ -1,8 +1,6 @@
 package net.jsrbc.ddd.core.dto;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 树结构传输数据
