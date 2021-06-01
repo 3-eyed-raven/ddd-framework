@@ -2,9 +2,7 @@ package net.jsrbc.repository.mongodb.tools;
 
 import net.jsrbc.ddd.core.dto.PagingDTO;
 import net.jsrbc.ddd.core.view.View;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;

@@ -1,8 +1,6 @@
 package net.jsrbc.repository.mongodb.tools;
 
 import net.jsrbc.ddd.core.utils.Validator;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 /**
