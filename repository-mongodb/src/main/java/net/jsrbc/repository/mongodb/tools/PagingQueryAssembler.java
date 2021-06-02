@@ -9,21 +9,19 @@ import org.springframework.data.mongodb.core.query.Query;
  * @version 1.0
  */
 public final class PagingQueryAssembler {
-
     /**
      * 规格转查询对象
-     * @param query 查询条件
+     * @param source 源查询条件
      * @param current 当前页，从1开始
      * @param pageSize 页面尺寸
      * @return 查询对象
      */
-    public static Query toPagingQuery(Query query, Integer current, Integer pageSize) {
+    public static Query toPagingQuery(Query source, Integer current, Integer pageSize) {
         Validator.notNull(current, "current 不能为空");
         Validator.notNull(pageSize, "pageSize 不能为空");
-        query = query
+        return Query.of(source)
                 .skip((long) (current - 1) * pageSize)
                 .limit(pageSize);
-        return query;
     }
 
     private PagingQueryAssembler() {}
