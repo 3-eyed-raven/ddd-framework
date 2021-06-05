@@ -3,6 +3,7 @@ package net.jsrbc.event.rabbitmq;
 import com.rabbitmq.client.MessageProperties;
 import net.jsrbc.ddd.core.model.event.DomainEvent;
 import net.jsrbc.ddd.core.model.event.EventSender;
+import net.jsrbc.ddd.core.utils.JsonUtils;
 import reactor.core.publisher.Mono;
 import reactor.rabbitmq.OutboundMessage;
 import reactor.rabbitmq.Sender;

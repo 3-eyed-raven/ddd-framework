@@ -2,6 +2,7 @@ package net.jsrbc.event.rabbitmq;
 
 import net.jsrbc.ddd.core.model.event.DomainEvent;
 import net.jsrbc.ddd.core.model.event.EventSubscriber;
+import net.jsrbc.ddd.core.utils.JsonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;

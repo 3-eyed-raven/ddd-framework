@@ -4,6 +4,8 @@ import static net.jsrbc.ddd.core.model.aggregate.Aggregate.VERSION_KEY;
 import static org.springframework.data.mongodb.core.query.Query.*;
 import static org.springframework.data.mongodb.core.query.Criteria.*;
 
+import static net.jsrbc.ddd.core.utils.Validator.*;
+
 /**
  * 视图版本检查器
  * @author ZZZ on 2021/5/26 11:54
@@ -21,6 +23,9 @@ public class ViewVersionChecker {
      * @return 检查结果
      */
     public ViewVersionCheckResult check(String id, Long version, String viewName) {
+        notNull(id, "id 不能为空");
+        notNull(version, "version 不能为空");
+        notNull(viewName, "viewName 不能为空");
         return new ViewVersionCheckResult(this.viewMongoOperations.exists(query(where("id").is(id).and(VERSION_KEY).gte(version)), viewName));
     }
 

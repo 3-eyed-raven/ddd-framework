@@ -6,10 +6,6 @@ dependencies {
     implementation project(":ddd-core")
     implementation 'org.springframework.boot:spring-boot-starter:2.4.3'
     implementation 'io.projectreactor.rabbitmq:reactor-rabbitmq:1.5.1'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.4'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.4'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.4'
-    implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.11.4'
 }
 
 compileJava {

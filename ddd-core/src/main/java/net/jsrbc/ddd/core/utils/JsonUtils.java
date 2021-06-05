@@ -1,4 +1,4 @@
-package net.jsrbc.event.rabbitmq;
+package net.jsrbc.ddd.core.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,7 +14,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-final class JsonUtils {
+/**
+ * Json工具
+ * @author ZZZ on 2021/2/21 17:30
+ * @version 1.0
+ */
+public class JsonUtils {
 
     /**
      * 将对象转为Json字符串
