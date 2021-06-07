@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  视图状态适配器配置
+ * 视图状态适配器配置
  * @author ZZZ on 2021/6/5 16:28
  * @version 1.0
  */
