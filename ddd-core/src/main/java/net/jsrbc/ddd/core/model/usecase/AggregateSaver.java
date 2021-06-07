@@ -16,6 +16,15 @@ public abstract class AggregateSaver<T extends Aggregate> {
     private final Repository<T> repository;
 
     /**
+     * 聚合映射
+     * @param aggregate 聚合
+     * @return 映射后的聚合
+     */
+    protected T map(T aggregate) {
+        return aggregate;
+    }
+
+    /**
      * 保存聚合
      * @param aggregate 聚合
      * @return 被保存的聚合
@@ -30,11 +39,13 @@ public abstract class AggregateSaver<T extends Aggregate> {
         if (aggregate instanceof TreeAggregate) {
             CircularReferenceCheckService.check((TreeAggregate) aggregate, (Repository<? extends TreeAggregate>) this.repository);
         }
-        // 3、聚合保存
+        // 3、聚合映射
+        aggregate = map(aggregate);
+        // 4、聚合保存
         this.repository.save(aggregate);
-        // 4、聚合保存通知
+        // 5、聚合保存通知
         aggregate.notifySaved();
-        // 5、被保存聚合返回
+        // 6、被保存聚合返回
         return aggregate;
     }
 
