@@ -1,5 +1,7 @@
 package net.jsrbc.ddd.core.model.aggregate;
 
+import net.jsrbc.ddd.core.model.event.DomainEvent;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -29,6 +31,16 @@ public abstract class Aggregate {
      * 校验聚合
      */
     public abstract void validate();
+
+    /**
+     * 通知保存事件
+     */
+    public abstract void notifySaved();
+
+    /**
+     * 通知删除事件
+     */
+    public abstract void notifyRemoved();
 
     /**
      * 更新版本号
