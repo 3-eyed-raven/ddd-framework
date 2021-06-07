@@ -1,7 +1,5 @@
 package net.jsrbc.ddd.core.model.aggregate;
 
-import net.jsrbc.ddd.core.model.event.DomainEvent;
-
 import java.util.Optional;
 import java.util.function.Supplier;
 
