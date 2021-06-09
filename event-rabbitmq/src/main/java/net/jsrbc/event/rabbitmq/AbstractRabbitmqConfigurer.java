@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import reactor.core.publisher.Mono;
 import reactor.rabbitmq.*;
 
@@ -87,6 +88,7 @@ public abstract class AbstractRabbitmqConfigurer {
      * 事件订阅器
      */
     @Bean(destroyMethod = "close")
+    @DependsOn("eventSender")
     public EventSubscriber eventSubscriber(ConnectionFactory connectionFactory, BindingRegistry bindingRegistry, Sender sender) {
         ReceiverOptions receiverOptions = new ReceiverOptions();
         receiverOptions.connectionFactory(connectionFactory);
