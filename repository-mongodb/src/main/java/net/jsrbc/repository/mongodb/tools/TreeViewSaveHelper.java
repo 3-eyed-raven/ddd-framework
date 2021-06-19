@@ -1,6 +1,7 @@
 package net.jsrbc.repository.mongodb.tools;
 
 import net.jsrbc.ddd.core.view.TreeView;
+import net.jsrbc.ddd.core.view.View;
 import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 import static org.springframework.data.mongodb.core.query.Query.*;
 import static org.springframework.data.mongodb.core.query.Criteria.*;
@@ -34,6 +36,27 @@ public class TreeViewSaveHelper {
                         .flatMapMany(o -> this.changeSubNodeAncestorIds(t))
                         .blockLast())
                 .flatMap(this.reactiveViewMongoOperations::save);
+    }
+
+    /**
+     * 更新视图祖先节点
+     * @param targetId 目标ID
+     * @param targetAncestorIds 目标的祖先节点
+     * @param ancestorKey 祖先节点属性名
+     * @param oldAncestorGetter 旧的祖先节点获取函数
+     * @param viewClass 视图类
+     */
+    public <T extends View> Mono<Void> updateAncestor(String targetId, List<String> targetAncestorIds, String ancestorKey, Function<T, List<String>> oldAncestorGetter, Class<T> viewClass) {
+        return this.reactiveViewMongoOperations
+                .find(query(where(ancestorKey).is(targetId)), viewClass)
+                .flatMap(v -> {
+                    List<String> ancestorIds = new ArrayList<>(targetAncestorIds);
+                    List<String> oldAncestor = oldAncestorGetter.apply(v);
+                    int index = oldAncestor.indexOf(targetId);
+                    ancestorIds.addAll(oldAncestor.subList(index, oldAncestor.size()));
+                    return this.reactiveViewMongoOperations.update(query(where(ancestorKey).is(targetId)), Update.update(ancestorKey, ancestorIds), viewClass);
+                })
+                .then();
     }
 
     public TreeViewSaveHelper(ReactiveViewMongoOperations reactiveViewMongoOperations) {
