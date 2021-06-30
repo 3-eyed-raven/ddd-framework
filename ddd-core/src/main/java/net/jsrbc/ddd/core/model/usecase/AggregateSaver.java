@@ -25,6 +25,11 @@ public abstract class AggregateSaver<T extends Aggregate> {
     }
 
     /**
+     * 聚合保存后的处理
+     */
+    protected void doOnSaved(T aggregate) {}
+
+    /**
      * 保存聚合
      * @param aggregate 聚合
      * @return 被保存的聚合
@@ -45,7 +50,9 @@ public abstract class AggregateSaver<T extends Aggregate> {
         this.repository.save(aggregate);
         // 5、聚合保存通知
         aggregate.notifySaved();
-        // 6、被保存聚合返回
+        // 6、保存后的一些自定义操作
+        this.doOnSaved(aggregate);
+        // 7、被保存聚合返回
         return aggregate;
     }
 

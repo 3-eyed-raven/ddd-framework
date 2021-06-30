@@ -20,6 +20,12 @@ public abstract class AggregateRemover<T extends Aggregate> {
     protected void preconditionCheck(Aggregate aggregate) {}
 
     /**
+     * 聚合删除后的操作
+     * @param aggregate 聚合
+     */
+    protected void doOnRemoved(T aggregate) {}
+
+    /**
      * 删除聚合
      * @param id 聚合ID
      * @return 被删除的聚合
@@ -37,7 +43,9 @@ public abstract class AggregateRemover<T extends Aggregate> {
         this.repository.remove(aggregate);
         // 6、发起通知
         aggregate.notifyRemoved();
-        // 7、返回
+        // 7、聚合已经删除后的操作
+        this.doOnRemoved(aggregate);
+        // 8、返回
         return aggregate;
     }
 
