@@ -40,7 +40,7 @@ public class Validator {
      * @param message 校验信息
      */
     public static void match(String text, String regex, String message) {
-        if (text == null || regex == null) return;
+        if (text == null || text.isEmpty()) return;
         if (!text.matches(regex)) {
             throw new IllegalArgumentException(message);
         }
