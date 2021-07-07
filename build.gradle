@@ -14,7 +14,7 @@ subprojects {
         // 公共仓库，本地和阿里云优先
         repositories {
             mavenLocal()
-            maven {url "http://maven.aliyun.com/nexus/content/groups/public"}
+            maven {url "https://maven.aliyun.com/nexus/content/groups/public"}
             mavenCentral()
         }
         // 公共依赖包
