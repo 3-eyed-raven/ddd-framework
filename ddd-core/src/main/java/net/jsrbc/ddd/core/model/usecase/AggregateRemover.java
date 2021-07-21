@@ -17,13 +17,13 @@ public abstract class AggregateRemover<T extends Aggregate> {
     /**
      * 检查前置条件
      */
-    protected void preconditionCheck(Aggregate aggregate) {}
+    protected void beforeRemove(T aggregate) {}
 
     /**
      * 聚合删除后的操作
      * @param aggregate 聚合
      */
-    protected void doOnRemoved(T aggregate) {}
+    protected void afterRemove(T aggregate) {}
 
     /**
      * 删除聚合
@@ -38,13 +38,13 @@ public abstract class AggregateRemover<T extends Aggregate> {
         // 3、校验聚合
         notNull(aggregate, "对象不存在");
         // 4、删除的前置条件检查
-        this.preconditionCheck(aggregate);
+        this.beforeRemove(aggregate);
         // 5、删除聚合
         this.repository.remove(aggregate);
         // 6、发起通知
         aggregate.notifyRemoved();
         // 7、聚合已经删除后的操作
-        this.doOnRemoved(aggregate);
+        this.afterRemove(aggregate);
         // 8、返回
         return aggregate;
     }

@@ -20,14 +20,14 @@ public abstract class AggregateSaver<T extends Aggregate> {
      * @param aggregate 聚合
      * @return 映射后的聚合
      */
-    protected T map(T aggregate) {
+    protected T beforeSave(T aggregate) {
         return aggregate;
     }
 
     /**
      * 聚合保存后的处理
      */
-    protected void doOnSaved(T aggregate) {}
+    protected void afterSave(T aggregate) {}
 
     /**
      * 保存聚合
@@ -45,13 +45,13 @@ public abstract class AggregateSaver<T extends Aggregate> {
             CircularReferenceCheckService.check((TreeAggregate) aggregate, (Repository<? extends TreeAggregate>) this.repository);
         }
         // 3、聚合映射
-        aggregate = map(aggregate);
+        aggregate = this.beforeSave(aggregate);
         // 4、聚合保存
         this.repository.save(aggregate);
         // 5、聚合保存通知
         aggregate.notifySaved();
         // 6、保存后的一些自定义操作
-        this.doOnSaved(aggregate);
+        this.afterSave(aggregate);
         // 7、被保存聚合返回
         return aggregate;
     }
