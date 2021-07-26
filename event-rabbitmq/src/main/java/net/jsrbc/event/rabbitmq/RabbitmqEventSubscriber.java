@@ -66,6 +66,20 @@ public class RabbitmqEventSubscriber implements EventSubscriber {
     }
 
     @Override
+    public <T extends DomainEvent> void globalSubscribe(Class<T> eventClass, Consumer<T> eventConsumer, BiConsumer<? super Throwable, T> errorHandler) {
+        globalDeclareAndBindQueue(eventClass)
+                .flatMapMany(this.receiver::consumeAutoAck)
+                .subscribe(d -> {
+                    T event = JsonUtils.toObject(new String(d.getBody(), StandardCharsets.UTF_8), eventClass);
+                    try {
+                        eventConsumer.accept(event);
+                    } catch (Throwable e) {
+                        errorHandler.accept(e, event);
+                    }
+                });
+    }
+
+    @Override
     public void close() {
         this.receiver.close();
     }
@@ -87,7 +101,23 @@ public class RabbitmqEventSubscriber implements EventSubscriber {
         String exchangeName = this.bindingRegistry.getExchangeName(eventClass);
         return this.sender
                 .declareQueue(QueueSpecification.queue(queueName).durable(true))
-                .then(this.sender.bindQueue(BindingSpecification.queueBinding(exchangeName, routingKey, queueName)))
-                .thenReturn(queueName);
+                .flatMap(d -> this.sender
+                        .bindQueue(BindingSpecification.queueBinding(exchangeName, routingKey, d.getQueue()))
+                        .thenReturn(d.getQueue()));
+    }
+
+    /**
+     * 声明和绑定队列
+     * @param eventClass 事件类型
+     * @return 队列
+     */
+    private Mono<String> globalDeclareAndBindQueue(Class<?> eventClass) {
+        String routingKey = this.bindingRegistry.getRoutingKey(eventClass);
+        String exchangeName = this.bindingRegistry.getExchangeName(eventClass);
+        return this.sender
+                .declareQueue(QueueSpecification.queue())
+                .flatMap(d -> this.sender
+                        .bindQueue(BindingSpecification.queueBinding(exchangeName, routingKey, d.getQueue()))
+                        .thenReturn(d.getQueue()));
     }
 }
