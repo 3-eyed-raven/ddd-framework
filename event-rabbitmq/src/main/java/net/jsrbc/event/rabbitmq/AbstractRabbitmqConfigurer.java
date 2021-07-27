@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import reactor.core.publisher.Mono;
 import reactor.rabbitmq.*;
 
 /**
@@ -49,6 +48,15 @@ public abstract class AbstractRabbitmqConfigurer {
     }
 
     /**
+     * 连接提供
+     * @return 连接提供者
+     */
+    @Bean
+    public Utils.ExceptionFunction<ConnectionFactory, ? extends Connection> connectionSupplier(ConnectionFactory connectionFactory) {
+        return Utils.singleConnectionSupplier(connectionFactory, ConnectionFactory::newConnection);
+    }
+
+    /**
      * 绑定注册
      */
     @Bean
@@ -59,14 +67,9 @@ public abstract class AbstractRabbitmqConfigurer {
     }
 
     @Bean
-    public Sender sender(ConnectionFactory connectionFactory) {
-        Mono<Connection> connectionMono = Mono.fromCallable(connectionFactory::newConnection);
+    public Sender sender(Utils.ExceptionFunction<ConnectionFactory, ? extends Connection> connectionSupplier) {
         SenderOptions senderOptions = new SenderOptions();
-        senderOptions.connectionMono(connectionMono);
-        if (rabbitmqProperties.getChannelPoolSize() != null && rabbitmqProperties.getChannelPoolSize() > 0) {
-            senderOptions.channelPool(ChannelPoolFactory.createChannelPool(connectionMono,
-                    new ChannelPoolOptions().maxCacheSize(rabbitmqProperties.getChannelPoolSize())));
-        }
+        senderOptions.connectionSupplier(connectionSupplier);
         // 自定义sender
         configureSender(senderOptions);
         // 创建sender
@@ -89,9 +92,10 @@ public abstract class AbstractRabbitmqConfigurer {
      */
     @Bean(destroyMethod = "close")
     @DependsOn("eventSender")
-    public EventSubscriber eventSubscriber(ConnectionFactory connectionFactory, BindingRegistry bindingRegistry, Sender sender) {
+    public EventSubscriber eventSubscriber(Utils.ExceptionFunction<ConnectionFactory, ? extends Connection> connectionSupplier,
+                                           BindingRegistry bindingRegistry, Sender sender) {
         ReceiverOptions receiverOptions = new ReceiverOptions();
-        receiverOptions.connectionFactory(connectionFactory);
+        receiverOptions.connectionSupplier(connectionSupplier);
         // 自定义receiver
         configureReceiver(receiverOptions);
         // 创建receiver
