@@ -1,8 +1,8 @@
 package net.jsrbc.repository.mongodb;
 
-import net.jsrbc.ddd.core.model.event.AbstractEventStore;
-import net.jsrbc.ddd.core.model.event.DomainEvent;
-import net.jsrbc.ddd.core.model.event.EventSender;
+import net.jsrbc.ddd.core.event.EventStore;
+import net.jsrbc.ddd.core.event.DomainEvent;
+import net.jsrbc.ddd.core.event.EventSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +12,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.function.Consumer;
 
-import static net.jsrbc.ddd.core.model.event.EventStatus.*;
-import static net.jsrbc.ddd.core.model.event.EventStatus.SUCCESS;
+import static net.jsrbc.ddd.core.event.EventStatus.*;
+import static net.jsrbc.ddd.core.event.EventStatus.SUCCESS;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.data.mongodb.core.query.Update.update;
@@ -24,7 +24,7 @@ import static org.springframework.data.mongodb.core.query.Update.update;
  * @version 1.0
  */
 @Configuration
-public class ReactiveMongoEventStore extends AbstractEventStore {
+public class ReactiveMongoEventStore extends EventStore {
 
     /** 日志记录 */
     private final static Logger LOGGER = LogManager.getLogger();

@@ -1,7 +1,7 @@
 package net.jsrbc.repository.mongodb.tools;
 
-import net.jsrbc.ddd.core.view.TreeView;
-import net.jsrbc.ddd.core.view.View;
+import net.jsrbc.ddd.core.old.view.TreeView;
+import net.jsrbc.ddd.core.old.view.View;
 import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

@@ -1,6 +1,6 @@
 package net.jsrbc.repository.mongodb.tools;
 
-import net.jsrbc.ddd.core.utils.Validator;
+import net.jsrbc.ddd.core.old.utils.Validator;
 import org.springframework.data.mongodb.core.query.Query;
 
 /**

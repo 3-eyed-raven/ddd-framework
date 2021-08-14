@@ -1,7 +1,7 @@
 package net.jsrbc.repository.mongodb.tools;
 
 import com.mongodb.client.result.UpdateResult;
-import net.jsrbc.ddd.core.model.aggregate.Aggregate;
+import net.jsrbc.ddd.core.aggregate.Aggregate;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static net.jsrbc.ddd.core.model.aggregate.Aggregate.DELETE_KEY;
-import static net.jsrbc.ddd.core.model.aggregate.Aggregate.VERSION_KEY;
+import static net.jsrbc.ddd.core.aggregate.Aggregate.DELETE_KEY;
+import static net.jsrbc.ddd.core.aggregate.Aggregate.VERSION_KEY;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -93,11 +93,37 @@ public class SafeMongoTemplate implements SafeMongoOperations {
     }
 
     @Override
+    public void save(Aggregate aggregate, String collectionName) {
+        // 执行新增或更新
+        if (this.mongoOperations.exists(query(where("id").is(aggregate.getId())), Aggregate.class, collectionName)) {
+            Aggregate result = this.mongoOperations.findAndReplace(
+                    versionQuery(aggregate).addCriteria(where(DELETE_KEY).is(null)), aggregate, collectionName);
+            if (result == null) {
+                throw new InvalidDataException();
+            }
+        } else {
+            this.mongoOperations.insert(aggregate, collectionName);
+        }
+    }
+
+    @Override
     public void remove(Aggregate aggregate) {
         UpdateResult result = this.mongoOperations.updateMulti(
                 query(where("id").is(aggregate.getId()).and(VERSION_KEY).is(aggregate.getVersion()).and(DELETE_KEY).is(null)),
                 Update.update(DELETE_KEY, System.currentTimeMillis()),
                 aggregate.getClass());
+        if (result.getModifiedCount() == 0) {
+            throw new InvalidDataException();
+        }
+    }
+
+    @Override
+    public void remove(Aggregate aggregate, String collectionName) {
+        UpdateResult result = this.mongoOperations.updateMulti(
+                query(where("id").is(aggregate.getId()).and(VERSION_KEY).is(aggregate.getVersion()).and(DELETE_KEY).is(null)),
+                Update.update(DELETE_KEY, System.currentTimeMillis()),
+                aggregate.getClass(),
+                collectionName);
         if (result.getModifiedCount() == 0) {
             throw new InvalidDataException();
         }

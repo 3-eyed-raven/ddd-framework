@@ -2,8 +2,8 @@ package net.jsrbc.event.rabbitmq;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import net.jsrbc.ddd.core.model.event.EventSender;
-import net.jsrbc.ddd.core.model.event.EventSubscriber;
+import net.jsrbc.ddd.core.event.EventSender;
+import net.jsrbc.ddd.core.event.EventSubscriber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

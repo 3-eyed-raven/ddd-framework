@@ -1,6 +1,6 @@
 package net.jsrbc.repository.mongodb.tools;
 
-import net.jsrbc.ddd.core.model.aggregate.Aggregate;
+import net.jsrbc.ddd.core.aggregate.Aggregate;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
@@ -101,9 +101,24 @@ public interface SafeMongoOperations {
     void save(Aggregate aggregate);
 
     /**
+     * 并发安全的保存操作，通过乐观锁实现，会去比较聚合的版本号
+     * @param aggregate 聚合
+     * @param collectionName 显示声明的集合名
+     * @throws InvalidDataException 版本冲突异常
+     */
+    void save(Aggregate aggregate, String collectionName);
+
+    /**
      * 删除一个聚合，使用逻辑删除
      */
     void remove(Aggregate aggregate);
+
+    /**
+     * 删除一个聚合，使用逻辑删除
+     * @param aggregate 聚合
+     * @param collectionName 显示声明的集合名
+     */
+    void remove(Aggregate aggregate, String collectionName);
 
     /**
      * 还原一个被删除的聚合

@@ -1,7 +1,7 @@
 package net.jsrbc.repository.mongodb.tools;
 
-import net.jsrbc.ddd.core.dto.PagingDTO;
-import net.jsrbc.ddd.core.view.View;
+import net.jsrbc.ddd.core.old.dto.PagingDTO;
+import net.jsrbc.ddd.core.old.view.View;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static net.jsrbc.ddd.core.model.aggregate.Aggregate.VERSION_KEY;
+import static net.jsrbc.ddd.core.aggregate.Aggregate.VERSION_KEY;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
